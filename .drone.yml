@@ -1,0 +1,30 @@
+---
+kind: pipeline
+type: docker
+name: default
+
+
+steps:
+- name: build
+  image: golang
+  commands:
+  - VERSION=$(echo $DRONE_TAG | awk -F'-' '{ gsub(/^v/,"",$1); print $1 }')
+  - RELEASE=$(echo $DRONE_TAG | awk -F'-' '{ print $2 "-" $3 }')
+  - echo $VERSION
+  - echo $RELEASE
+  - go install github.com/coredhcp/coredhcp/cmds/coredhcp@v0.0.0-20210830115404-2176f33418f4
+  - env GOOS=linux GOARCH=arm go install github.com/coredhcp/coredhcp/cmds/coredhcp@v0.0.0-20210830115404-2176f33418f41
+  - env GOOS=linux GOARCH=arm64 go install github.com/coredhcp/coredhcp/cmds/coredhcp@v0.0.0-20210830115404-2176f33418f4
+  - mv /go/bin ./bin
+
+steps:
+- name: build
+  image: goreleaser/nfpm
+  commands:
+  - echo $VERSION
+  - echo $RELEASE
+  - ls -la bin
+
+trigger:
+  event:
+  - tag
