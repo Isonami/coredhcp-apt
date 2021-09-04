@@ -10,11 +10,11 @@ steps:
   commands:
   - mkdir armhf arm64 amd64
   - go install github.com/coredhcp/coredhcp/cmds/coredhcp@v0.0.0-20210830115404-2176f33418f4
-  - mv /go/bin/coredns amd64/
+  - mv /go/bin/coredhcp amd64/
   - env GOOS=linux GOARCH=arm go install github.com/coredhcp/coredhcp/cmds/coredhcp@v0.0.0-20210830115404-2176f33418f4
-  - mv /go/bin/linux_arm/coredns armhf/
+  - mv /go/bin/linux_arm/coredhcp armhf/
   - env GOOS=linux GOARCH=arm64 go install github.com/coredhcp/coredhcp/cmds/coredhcp@v0.0.0-20210830115404-2176f33418f4
-  - mv /go/bin/linux_arm64/coredns arm64/
+  - mv /go/bin/linux_arm64/coredhcp arm64/
 
 - name: pack
   image: goreleaser/nfpm
@@ -22,7 +22,7 @@ steps:
   - export VERSION=$(echo $DRONE_TAG | awk -F'-' '{ print $1 }')
   - export RELEASE=$(echo $DRONE_TAG | awk -F'-' '{ print $2 "-" $3 }')
   - ls -la .
-  - env ARCH=armhf /nfpm pkg --traget coredns_${VERSION}_${RELEASE}_armhf.deb
+  - env ARCH=armhf /nfpm pkg --traget coredhcp_${VERSION}_${RELEASE}_armhf.deb
 
 trigger:
   event:
