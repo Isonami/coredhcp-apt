@@ -22,11 +22,20 @@ steps:
   - export VERSION=$(echo $DRONE_TAG | awk -F'-' '{ print $1 }')
   - export RELEASE=$(echo $DRONE_TAG | awk -F'-' '{ print $2 "-" $3 }')
   - ln -fs ./armhf/ ./bin
-  - env export ARCH=armhf nfpm package --target coredhcp_$${VERSION}_$${RELEASE}_armhf.deb
+  - env ARCH=armhf nfpm package --target coredhcp_$${VERSION}_$${RELEASE}_armhf.deb
   - ln -fs ./arm64/ ./bin
   - env ARCH=arm64 nfpm package --target coredhcp_$${VERSION}_$${RELEASE}_arm64.deb
   - ln -fs ./amd64/ ./bin
   - env ARCH=amd64 nfpm package --target coredhcp_$${VERSION}_$${RELEASE}_amd64.deb
+
+- name: publish
+  image: plugins/github-release
+  settings:
+    api_key: ${GH_TOKEN}
+    files:
+      - coredhcp_*.deb
+   checksum:
+      - sha256
 
 trigger:
   event:
