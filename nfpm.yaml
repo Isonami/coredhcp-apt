@@ -2,16 +2,19 @@ name: "coredhcp"
 arch: "${ARCH}"
 platform: "linux"
 version: "${VERSION}"
+release: "${RELEASE}"
 maintainer: "Pavel Kirillov <levru333@gmail.com>"
 description: |
   Fast, multithreaded, modular and extensible DHCP server written in Go
 license: "MIT"
-bindir: "/usr/sbin"
-files:
-  ./${ARCH}/coredhcp: "/usr/sbin/coredhcp"
-  ./debian/coredhcp.service: "/lib/systemd/system/coredhcp.service"
-config_files:
-  ./debian/config.yaml: "/etc/coredhcp/config.yaml"
+contents:
+  - src: ./bin/coredhcp
+    dst: /usr/sbin/coredhcp
+  - src: ./debian/coredhcp.service
+    dst: /lib/systemd/system/coredhcp.service
+  - src: ./debian/config.yaml
+    dst: /etc/coredhcp/config.yaml
+    type: config
 scripts:
   postinstall: ./debian/postinst.sh
   postremove: ./debian/postrm.sh

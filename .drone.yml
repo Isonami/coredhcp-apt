@@ -22,7 +22,12 @@ steps:
   - export VERSION=$(echo $DRONE_TAG | awk -F'-' '{ print $1 }')
   - export RELEASE=$(echo $DRONE_TAG | awk -F'-' '{ print $2 "-" $3 }')
   - ls -la .
-  - env ARCH=armhf /nfpm pkg --traget coredhcp_${VERSION}_${RELEASE}_armhf.deb
+  - ln -fs ./bin ./armhf/
+  - env ARCH=armhf nfpm package --traget coredhcp_${VERSION}_${RELEASE}_armhf.deb
+  - ln -fs ./bin ./arm64/
+  - env ARCH=arm64 nfpm package --traget coredhcp_${VERSION}_${RELEASE}_arm64.deb
+  - ln -fs ./bin ./amd64/
+  - env ARCH=amd64 nfpm package --traget coredhcp_${VERSION}_${RELEASE}_amd64.deb
 
 trigger:
   event:
