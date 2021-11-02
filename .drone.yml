@@ -31,10 +31,11 @@ steps:
 - name: publish
   image: plugins/github-release
   settings:
-    api_key: ${GH_TOKEN}
+    api_key:
+      from_secret: GH_TOKEN
     files:
       - coredhcp_*.deb
-   checksum:
+    checksum:
       - sha256
 
 trigger:
